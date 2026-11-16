@@ -1,17 +1,18 @@
 "use client";
 
-import { AnimatePresence, motion, MotionConfig, useScroll, useSpring } from "motion/react";
+import { motion, MotionConfig, useScroll, useSpring } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { wedding } from "@/lib/config";
 import Cover from "./Cover";
+import Dust from "./Dust";
 import Gifts from "./Gifts";
 import Hero from "./Hero";
-import Petals from "./Petals";
 import Rsvp from "./Rsvp";
 import { Closing, DateSection, Letter, Marquee, Program, Venue } from "./Sections";
 
 export default function Invitation() {
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useState(false); // qulf ochildi, sahifa ko'rinmoqda
+  const [covered, setCovered] = useState(true); // muqova hali ekranda
   const [playing, setPlaying] = useState(false);
   const [hasMusic, setHasMusic] = useState(true);
   const audio = useRef<HTMLAudioElement>(null);
@@ -51,20 +52,19 @@ export default function Invitation() {
         onError={() => setHasMusic(false)}
       />
 
-      <AnimatePresence>
-        {!opened && (
-          <Cover
-            key="cover"
-            onUnlock={play}
-            onOpen={() => {
-              window.scrollTo(0, 0);
-              setOpened(true);
-            }}
-          />
-        )}
-      </AnimatePresence>
+      {covered && (
+        <Cover
+          onUnlock={play}
+          onOpen={() => {
+            window.scrollTo(0, 0);
+            setOpened(true);
+          }}
+          onGone={() => setCovered(false)}
+        />
+      )}
 
-      <Petals />
+      <Dust />
+      <div className="grain" aria-hidden />
       <motion.span className="progress" style={{ scaleX: progress }} aria-hidden />
 
       {opened && hasMusic && (
@@ -76,7 +76,7 @@ export default function Invitation() {
           aria-pressed={playing}
           initial={{ opacity: 0, scale: 0.6 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1.2, type: "spring", stiffness: 260, damping: 18 }}
+          transition={{ delay: 1.6, type: "spring", stiffness: 260, damping: 18 }}
         >
           <i />
           <i />
@@ -85,7 +85,7 @@ export default function Invitation() {
         </motion.button>
       )}
 
-      <main>
+      <main inert={!opened}>
         <Hero opened={opened} />
         <Letter />
         <Marquee />

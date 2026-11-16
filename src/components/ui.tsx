@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, type Variants } from "motion/react";
-import type { ReactNode } from "react";
+import { animate, motion, useInView, useMotionValue, useReducedMotion, useTransform, type Variants } from "motion/react";
+import { useEffect, useRef, type PointerEvent, type ReactNode } from "react";
 
 export const EASE = [0.22, 0.7, 0.2, 1] as const;
 
@@ -38,6 +38,44 @@ export function Reveal({
   );
 }
 
+/**
+ * Shishasimon qora karta. Hoshiyasi bo'ylab zar nur aylanib yuradi,
+ * sichqoncha ostida esa yumshoq yorug'lik dog'i ergashadi.
+ */
+export function Card({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref);
+
+  const spot = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") return;
+    const box = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - box.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - box.top}px`);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      className={`card ${className}${inView ? " is-inview" : ""}`}
+      initial={{ opacity: 0, y: 40, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 1.05, delay, ease: EASE }}
+      onPointerMove={spot}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 /** Matnni so'zma-so'z ochadi */
 export function Words({ text, className }: { text: string; className?: string }) {
   return (
@@ -64,6 +102,34 @@ export function Words({ text, className }: { text: string; className?: string })
       ))}
     </motion.p>
   );
+}
+
+/** Ko'ringanda noldan (yoki `from` dan) kerakli songacha sanab chiqadi */
+export function CountUp({
+  to,
+  from = 0,
+  pad = 0,
+  duration = 1.8,
+}: {
+  to: number;
+  from?: number;
+  pad?: number;
+  duration?: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const reduce = useReducedMotion();
+  const value = useMotionValue(to);
+  const text = useTransform(value, (v) => String(Math.round(v)).padStart(pad, "0"));
+
+  useEffect(() => {
+    if (!inView || reduce) return;
+    value.set(from);
+    const controls = animate(value, to, { duration, ease: [0.16, 1, 0.3, 1] });
+    return () => controls.stop();
+  }, [inView, reduce, value, from, to, duration]);
+
+  return <motion.span ref={ref}>{text}</motion.span>;
 }
 
 /** Bo'lim sarlavhasi: kichik yorliq, sarlavha va chizilib chiqadigan bezak */
@@ -141,6 +207,16 @@ export function Sprig({ className, flip }: { className?: string; flip?: boolean 
       ))}
       <motion.circle cx="40" cy="11" r="3" variants={draw} />
     </motion.svg>
+  );
+}
+
+/** Bo'limning qora foni ustida sekin suzib yuradigan zar shu'lalar */
+export function Glow() {
+  return (
+    <div className="glow" aria-hidden>
+      <i />
+      <i />
+    </div>
   );
 }
 

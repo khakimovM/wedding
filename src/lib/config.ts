@@ -12,6 +12,7 @@ export const wedding = {
   /** To'y boshlanishi (Toshkent vaqti, UTC+5) */
   dateISO: "2026-11-27T14:00:00+05:00",
   day: "27",
+  monthNumber: "11",
   month: "noyabr",
   monthTitle: "Noyabr",
   year: "2026",
@@ -29,11 +30,14 @@ export const wedding = {
     name: "Ko’ksaroy",
     kind: "to’yxonasi",
     address: "Farg’ona kichik xalqa yo’li",
-    // To'yxonaning aniq lokatsiya havolalarini shu yerga qo'ying
-    google:
-      "https://www.google.com/maps/search/?api=1&query=Ko%27ksaroy%20to%27yxonasi%2C%20Farg%27ona%20kichik%20xalqa%20yo%27li",
+    // To'yxonaning xaritadagi aniq nuqtasi: 40.4035177 (kenglik), 71.784955 (uzunlik).
+    // Manzil o'zgarsa, quyidagi uchala havoladagi koordinatalarni ham yangilang.
+    google: "https://maps.app.goo.gl/ejcPMxCwNpNeseNr5",
     yandex:
-      "https://yandex.uz/maps/?text=Ko%27ksaroy%20to%27yxonasi%2C%20Farg%27ona%20kichik%20xalqa%20yo%27li",
+      "https://yandex.uz/maps/?ll=71.784955%2C40.4035177&pt=71.784955%2C40.4035177&z=17",
+    /** Sahifaning o'zida ko'rinadigan xarita */
+    embed:
+      "https://maps.google.com/maps?q=40.4035177%2C71.784955&z=16&hl=uz&output=embed",
   },
 
   googleCalendar:

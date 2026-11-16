@@ -3,7 +3,9 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useState, type FormEvent } from "react";
 import { wedding } from "@/lib/config";
-import { EASE, Heading, Reveal } from "./ui";
+import { photos } from "@/lib/photos";
+import { PhotoBg } from "./Photo";
+import { Card, EASE, Heading, Reveal } from "./ui";
 
 type Status = "idle" | "sending" | "done";
 
@@ -44,14 +46,15 @@ export default function Rsvp() {
   }
 
   return (
-    <section className="section" id="javob">
+    <section className="section section--photo" id="javob">
+      <PhotoBg photo={photos.rsvp} className="photo--dark" />
       <div className="wrap">
         <Heading label="Javob" title="Kelishingizni tasdiqlang" />
         <Reveal>
           <p className="section__lead">Javobingiz to’g’ridan-to’g’ri kuyovning Telegramiga boradi.</p>
         </Reveal>
 
-        <Reveal className="card rsvp">
+        <Card className="rsvp">
           <AnimatePresence mode="wait" initial={false}>
             {status === "done" ? (
               <motion.div
@@ -186,7 +189,7 @@ export default function Rsvp() {
               </motion.form>
             )}
           </AnimatePresence>
-        </Reveal>
+        </Card>
       </div>
     </section>
   );

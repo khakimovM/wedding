@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useRef, useState, type PointerEvent } from "react";
 import { wedding } from "@/lib/config";
-import { Heading, Reveal } from "./ui";
+import { Glow, Heading, Reveal } from "./ui";
 
 async function copy(text: string) {
   try {
@@ -26,7 +26,7 @@ async function copy(text: string) {
   }
 }
 
-function GiftCard({ number, holder, tone }: { number: string; holder: string; tone: "gold" | "rose" }) {
+function GiftCard({ number, holder, tone }: { number: string; holder: string; tone: "gold" | "onyx" }) {
   const ref = useRef<HTMLButtonElement>(null);
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
 
@@ -89,7 +89,8 @@ function GiftCard({ number, holder, tone }: { number: string; holder: string; to
 
 export default function Gifts() {
   return (
-    <section className="section section--tint" id="toyona">
+    <section className="section section--solid" id="toyona">
+      <Glow />
       <div className="wrap">
         <Heading label="Sovg’a" title="To’yona" />
         <Reveal>
@@ -100,7 +101,7 @@ export default function Gifts() {
         <div className="gifts">
           {wedding.cards.map((card, i) => (
             <Reveal key={card.number} delay={i * 0.15}>
-              <GiftCard number={card.number} holder={card.holder} tone={i % 2 ? "rose" : "gold"} />
+              <GiftCard number={card.number} holder={card.holder} tone={i % 2 ? "onyx" : "gold"} />
             </Reveal>
           ))}
         </div>
