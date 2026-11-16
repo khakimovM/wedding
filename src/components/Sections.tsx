@@ -16,7 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { wedding, type ProgramIcon } from "@/lib/config";
 import { photos } from "@/lib/photos";
 import { PhotoBg } from "./Photo";
-import { Card, CountUp, draw, EASE, Glow, Heading, HeartIcon, Reveal, Sprig, Words } from "./ui";
+import { Card, CountUp, draw, EASE, Glow, Heading, HeartIcon, Reveal, Sprig, Unveil } from "./ui";
 
 /* ---------------- Taklif matni ---------------- */
 
@@ -26,11 +26,11 @@ export function Letter() {
       <PhotoBg photo={photos.letter} className="photo--dim" />
       <div className="wrap">
         <Heading label="Taklifnoma" title="Aziz mehmonimiz!" />
-        <Words
+        <Unveil
           className="letter__text"
           text="Hayotimizdagi eng quvonchli kunni yaqinlarimiz davrasida nishonlamoqchimiz. Sizni oila a’zolaringiz bilan birga nikoh to’yimizga bag’ishlangan tantanali bazmga taklif etamiz."
         />
-        <Words className="letter__text letter__text--soft" text="Tashrifingiz biz uchun eng katta sovg’a bo’ladi." />
+        <Unveil className="letter__text letter__text--soft" text="Tashrifingiz biz uchun eng katta sovg’a bo’ladi." />
         <Reveal className="letter__sign" delay={0.2}>
           <span className="gold-text">
             {wedding.groom} <em>&amp;</em> {wedding.bride}
@@ -408,7 +408,7 @@ export function Closing() {
             <HeartIcon />
           </motion.div>
         </div>
-        <Words className="closing__lead" text="Sizni intizorlik bilan kutamiz" />
+        <Unveil className="closing__lead" text="Sizni intizorlik bilan kutamiz" />
         <Reveal className="closing__names" delay={0.2}>
           <span className="gold-text">
             {wedding.groom} <em>&amp;</em> {wedding.bride}

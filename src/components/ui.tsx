@@ -1,7 +1,16 @@
 "use client";
 
-import { animate, motion, useInView, useMotionValue, useReducedMotion, useTransform, type Variants } from "motion/react";
-import { useEffect, useRef, type PointerEvent, type ReactNode } from "react";
+import {
+  animate,
+  motion,
+  useInView,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+  type Variants,
+} from "motion/react";
+import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
 
 export const EASE = [0.22, 0.7, 0.2, 1] as const;
 
@@ -76,30 +85,37 @@ export function Card({
   );
 }
 
-/** Matnni so'zma-so'z ochadi */
-export function Words({ text, className }: { text: string; className?: string }) {
+/**
+ * Matn yumshoq parda ortidan asta ochiladi: uzun matn tepadan pastga, qisqasi chapdan o'ngga.
+ *
+ * Matn ataylab BITTA butun bo'lak bo'lib turadi. Avval har bir so'z alohida bo'lakka ajratilgan edi,
+ * natijada mehmon brauzeridagi avtomatik tarjimon ayrim so'zlarni o'chirib yuborib, gap ma'nosi
+ * buzilib qolardi. Bu yerda matnni so'zlarga bo'lmang.
+ */
+export function Unveil({ text, className }: { text: string; className?: string }) {
+  const long = text.length > 60;
+  const [done, setDone] = useState(false);
+  const sweep = useMotionValue(0);
+  const from = useTransform(sweep, [0, 1], [-45, 105]);
+  const to = useTransform(sweep, [0, 1], [-5, 145]);
+  const mask = useMotionTemplate`linear-gradient(${long ? 168 : 100}deg, #000 ${from}%, transparent ${to}%)`;
+
+  // Ochilib bo'lgach oddiy, hech qanday niqobsiz matn qoladi
+  if (done) return <p className={className}>{text}</p>;
+
   return (
     <motion.p
       className={className}
-      initial="hidden"
-      whileInView="show"
+      style={{ WebkitMaskImage: mask, maskImage: mask }}
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
-      transition={{ staggerChildren: 0.045 }}
+      transition={{ duration: 0.9, ease: EASE }}
+      onViewportEnter={() => {
+        animate(sweep, 1, { duration: long ? 2.1 : 1.3, ease: "easeInOut", onComplete: () => setDone(true) });
+      }}
     >
-      <span className="sr-only">{text}</span>
-      {text.split(" ").map((word, i) => (
-        <motion.span
-          key={i}
-          aria-hidden
-          className="word"
-          variants={{
-            hidden: { opacity: 0, y: "0.5em", filter: "blur(6px)" },
-            show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.7, ease: EASE } },
-          }}
-        >
-          {word}{" "}
-        </motion.span>
-      ))}
+      {text}
     </motion.p>
   );
 }

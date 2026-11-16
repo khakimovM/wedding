@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   description:
     "Zikrullo va Baxoroyning nikoh to’yiga taklifnoma. 27 noyabr 2026, soat 14:00.",
   robots: { index: false, follow: false },
+  // Brauzer sahifani o'zicha "tarjima" qilib, taklif matnidagi so'zlarni buzib yubormasin
+  other: { google: "notranslate" },
   openGraph: {
     title: "Zikrullo va Baxoroy to’yi",
     description: "Sizni 27 noyabr kuni soat 14:00 da nikoh to’yimizga taklif etamiz.",
@@ -47,7 +49,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="uz" className={`${script.variable} ${serif.variable} ${sans.variable}`}>
+    <html lang="uz" translate="no" className={`notranslate ${script.variable} ${serif.variable} ${sans.variable}`}>
       <body>{children}</body>
     </html>
   );
